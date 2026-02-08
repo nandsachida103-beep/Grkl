@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sinoy – GCS AI Helpdesk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 380px;
+            max-width: 95%;
+            height: 520px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #0b3c5d;
+            color: #ffffff;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .chat-header p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            background: #f2f5f9;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 85%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .user {
+            background: #4a90e2;
+            color: #fff;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+
+        .bot {
+            background: #ffffff;
+            color: #222;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+            border: 1px solid #ddd;
+        }
+
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: #0b3c5d;
+            color: #fff;
+            border: none;
+            padding: 0 18px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .chat-input button:hover {
+            background: #092f48;
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>Sinoy – GCS AI Helpdesk</h2>
+        <p>Gurukul Convent School Assistant</p>
+    </div>
+
+    <div class="chat-box" id="chatBox">
+        <div class="message bot">
+            Sinoy:-- Hello 👋  
+            Main Sinoy hoon. Aap Gurukul Convent School ke baare me kuch bhi pooch sakte ho.
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your question here..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        const input = document.getElementById("userInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        const chatBox = document.getElementById("chatBox");
+
+        // User message
+        const userDiv = document.createElement("div");
+        userDiv.className = "message user";
+        userDiv.textContent = message;
+        chatBox.appendChild(userDiv);
+
+        input.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot";
+            botDiv.textContent = data.reply;
+            chatBox.appendChild(botDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    }
+
+    document.getElementById("userInput").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+  </html>
