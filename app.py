@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from data import SCHOOL_DATA, school_data, CONTACT
 
 app = Flask(__name__)
@@ -89,9 +89,9 @@ def find_answer(user_msg):
         f"Please contact the school office at {CONTACT['numbers']}."
     )
 
-@app.route("/")
+  @app.route("/")
 def home():
-    return "Sinoy – Gurukul Convent School AI is running"
+    return render_template("index.html")
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
