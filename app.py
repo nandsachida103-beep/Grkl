@@ -76,8 +76,9 @@ def find_answer(user_msg):
 
     if "science" in user_msg or "exhibition" in user_msg:
         return (
-            SCHOOL_DATA.get("science exhibition date") + " " +
-            SCHOOL_DATA.get("head of science exhibition")
+            SCHOOL_DATA.get("science exhibition date")
+            + " "
+            + SCHOOL_DATA.get("head of science exhibition")
         )
 
     nested_result = search_nested(school_data, user_msg)
@@ -89,9 +90,12 @@ def find_answer(user_msg):
         f"Please contact the school office at {CONTACT['numbers']}."
     )
 
-  @app.route("/")
+
+@app.route("/")
 def home():
     return render_template("index.html")
+
+
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
