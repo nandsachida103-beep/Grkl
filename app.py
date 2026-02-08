@@ -89,7 +89,9 @@ def find_answer(user_msg):
         f"Please contact the school office at {CONTACT['numbers']}."
     )
 
-
+@app.route("/")
+def home():
+    return "Sinoy – Gurukul Convent School AI is running"
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
