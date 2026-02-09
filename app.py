@@ -3,36 +3,28 @@ from data import school_data, CONTACT
 
 app = Flask(__name__)
 
-BOT_NAME = "Sinoy"
-
-
 @app.route("/")
 def home():
     return render_template("index.html")
 
-
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_msg = request.json.get("message", "").lower()
+    user_message = request.json.get("message", "").lower()
 
-    # fees handling
-    if "fee" in user_msg or "fees" in user_msg:
-        for key in school_data:
-            if "fee" in key and any(word in user_msg for word in key.split()):
-                return jsonify({"reply": school_data[key]})
+    # sort keys by length (important fix)
+    sorted_keys = sorted(school_data.keys(), key=len, reverse=True)
 
-    # direct match
-    for key, value in school_data.items():
-        if key in user_msg:
-            return jsonify({"reply": value})
+    for key in sorted_keys:
+        if key in user_message:
+            return jsonify({
+                "chatbot": "Sinoy",
+                "message": school_data[key]
+            })
 
     return jsonify({
-        "reply": f"Sorry, I don’t have that info. Please contact school: {CONTACT['numbers']}"
+        "chatbot": "Sinoy",
+        "message": f"Sorry, I don’t have this information right now. Please contact the school office at {CONTACT['numbers']}."
     })
 
-
-import os
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=10000)
